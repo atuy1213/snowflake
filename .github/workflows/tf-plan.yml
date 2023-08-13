@@ -33,13 +33,13 @@ jobs:
       contents: read
       pull-requests: write
       statuses: write
+    defaults:
+      run:
+        working-directory: ./terraform
     strategy:
       matrix:
         path:
-          - terraform/src/common
-    defaults:
-      run:
-        working-directory: ./terraform/project
+          - src/common
     steps:
       - uses: actions/checkout@v3
 
