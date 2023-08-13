@@ -25,7 +25,7 @@ env:
   SNOWFLAKE_WAREHOUSE: "TERRAFORM_WH"
 
 jobs:
-  plan-common:
+  tf-plan:
     runs-on: ubuntu-22.04
     timeout-minutes: 60
     permissions:
@@ -35,11 +35,11 @@ jobs:
       statuses: write
     defaults:
       run:
-        working-directory: ./terraform
+        working-directory: ./terraform/src
     strategy:
       matrix:
         path:
-          - src/common
+          - common
     steps:
       - uses: actions/checkout@v3
 
