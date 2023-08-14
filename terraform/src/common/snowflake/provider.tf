@@ -5,7 +5,7 @@ terraform {
     bucket         = "gjc-yoshimura-tfstate-bucket"
     dynamodb_table = "gjc-yoshimura-tfstate-lock-table"
     region         = "ap-northeast-1"
-    key            = "github.com/atuy1213/snowflake/common.tfstate"
+    key            = "github.com/atuy1213/snowflake/common/snowflake.tfstate"
   }
 
   required_providers {

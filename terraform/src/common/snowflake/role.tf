@@ -20,7 +20,7 @@ resource "snowflake_role_grants" "accountadmin" {
   role_name              = local.snowflake_role.accountadmin
   enable_multiple_grants = true
   users = [
-    snowflake_user.developer.name,
+    snowflake_user.atuy1213.name,
   ]
 }
 
@@ -32,6 +32,6 @@ resource "snowflake_role_grants" "developer" {
   roles = [local.snowflake_role.sysadmin]
   // developerを付与するユーザを指定
   users = [
-    snowflake_user.developer.name,
+    snowflake_user.atuy1213.name,
   ]
 }
