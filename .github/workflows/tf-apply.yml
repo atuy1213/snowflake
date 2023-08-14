@@ -1,4 +1,4 @@
-name: terraform-apply-common
+name: terraform-apply
 
 on:
   workflow_dispatch:
@@ -8,8 +8,8 @@ on:
         required: true
         type: choice
         options:
-          - common
-          - snowflake
+          - common/github
+          - common/snowflake
       refresh_only:
         description: 'run state refresh only (not apply)'
         required: true
