@@ -39,7 +39,8 @@ jobs:
     strategy:
       matrix:
         path:
-          - common
+          - common/github
+          - common/snowflake
     steps:
       - uses: actions/checkout@v3
 
