@@ -1,49 +1,45 @@
-# resource "snowflake_database" "example_db" {
-#   name                        = upper("${var.environment}-example")
-#   comment                     = "This is example db."
-#   data_retention_time_in_days = 1
-# }
+// EXAMPLE データベースを作成
+resource "snowflake_database" "example" {
+  name                        = upper("${var.environment}-example")
+  comment                     = "This is example db."
+  data_retention_time_in_days = 1
+}
 
-# // developerロールにデータベースexample_dbのUSAGE権限を付与
-# resource "snowflake_database_grant" "grant" {
-#   database_name = snowflake_database.example_db.name
+// dbt ロールに EXAMPLE データベースのUSAGE権限を付与
+resource "snowflake_database_grant" "grant" {
+  database_name = snowflake_database.example.name
+  privilege     = "USAGE"
+  roles = [
+    snowflake_role.dbt.name,
+  ]
+}
 
-#   privilege = "USAGE"
-#   roles = [
-#     snowflake_role.developer.name,
-#   ]
-# }
+// EXAMPLE データベースに report スキーマを作成
+resource "snowflake_schema" "report" {
+  database            = snowflake_database.example.name
+  name                = "report"
+  comment             = "This is an example schema."
+  is_transient        = false
+  is_managed          = false
+  data_retention_days = 1
+}
 
-# // データベースexample_dbにスキーマexample_schemaを作成
-# resource "snowflake_schema" "example_schema" {
-#   database = snowflake_database.example_db.name
-#   name     = "example_schema"
-#   comment  = "This is an example schema."
+// dbt ロールに report スキーマのUSAGE権限を付与
+resource "snowflake_schema_grant" "grant" {
+  database_name = snowflake_database.example.name
+  schema_name   = snowflake_schema.report.name
+  privilege     = "USAGE"
+  roles = [
+    snowflake_role.dbt.name,
+  ]
+}
 
-#   is_transient        = false
-#   is_managed          = false
-#   data_retention_days = 1
-# }
-
-
-# // developerロールにスキーマexample_schemaのUSAGE権限を付与
-# resource "snowflake_schema_grant" "grant" {
-#   database_name = snowflake_database.example_db.name
-#   schema_name   = snowflake_schema.example_schema.name
-
-#   privilege = "USAGE"
-#   roles = [
-#     snowflake_role.developer.name,
-#   ]
-# }
-
-# // developerロールにデータベースexample_dbのSELECT権限を付与
-# resource "snowflake_table_grant" "select_example_db" {
-#   database_name = snowflake_database.example_db.name
-
-#   privilege = "SELECT"
-#   roles = [
-#     snowflake_role.developer.name,
-#   ]
-#   on_future = true
-# }
+// dbt ロールに EXAMPLE データベースのSELECT権限を付与
+resource "snowflake_table_grant" "select_example_db" {
+  database_name = snowflake_database.example.name
+  privilege     = "SELECT"
+  roles = [
+    snowflake_role.developer.name,
+  ]
+  on_future = true
+}
