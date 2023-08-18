@@ -39,7 +39,7 @@ resource "snowflake_table_grant" "select_example_db" {
   database_name = snowflake_database.example.name
   privilege     = "SELECT"
   roles = [
-    snowflake_role.developer.name,
+    snowflake_role.dbt.name,
   ]
   on_future = true
 }
