@@ -123,6 +123,7 @@ resource "snowflake_role_grants" "dev_developer" {
   enable_multiple_grants = true
   roles = [
     snowflake_role.developer.name,
+    snowflake_role.beginner, name,
   ]
 }
 
