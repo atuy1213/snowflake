@@ -41,6 +41,7 @@ jobs:
         path:
           - common/github
           - common/snowflake
+          - dev/snowflake
     steps:
       - uses: actions/checkout@v3
 
