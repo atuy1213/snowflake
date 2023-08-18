@@ -1,6 +1,6 @@
-resource "snowflake_user" "begginer" {
+resource "snowflake_user" "beginner" {
   provider     = snowflake.user_admin
-  name         = upper("begginer")
+  name         = upper("beginner")
   default_role = snowflake_role.beginner.name
   comment      = "Created by Terraform."
 }
