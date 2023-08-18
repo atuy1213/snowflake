@@ -5,13 +5,15 @@ resource "snowflake_database" "example" {
   data_retention_time_in_days = 1
 }
 
-// dbt ロールに EXAMPLE データベースのUSAGE権限を付与
+// EXAMPLE データベースのUSAGE権限を付与
 resource "snowflake_database_grant" "grant" {
   database_name = snowflake_database.example.name
   privilege     = "USAGE"
   roles = [
     local.snowflake_role.sysadmin,
     snowflake_role.dbt.name,
+    local.snowflake_role.admin,
+    local.snowflake_role.developer,
   ]
 }
 
@@ -25,22 +27,25 @@ resource "snowflake_schema" "report" {
   data_retention_days = 1
 }
 
-// dbt ロールに report スキーマのUSAGE権限を付与
+// report スキーマのUSAGE権限を付与
 resource "snowflake_schema_grant" "grant" {
   database_name = snowflake_database.example.name
   schema_name   = snowflake_schema.report.name
   privilege     = "USAGE"
   roles = [
     snowflake_role.dbt.name,
+    local.snowflake_role.admin,
+    local.snowflake_role.developer,
   ]
 }
 
-// dbt ロールに EXAMPLE データベースのSELECT権限を付与
+// EXAMPLE データベースのSELECT権限を付与
 resource "snowflake_table_grant" "select_example_db" {
   database_name = snowflake_database.example.name
   privilege     = "SELECT"
   roles = [
     snowflake_role.dbt.name,
+    local.snowflake_role.admin,
   ]
   on_future = true
 }
