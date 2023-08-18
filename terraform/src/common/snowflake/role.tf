@@ -7,6 +7,103 @@ locals {
   }
 }
 
+// beginnerのロール
+resource "snowflake_role" "beginner" {
+  provider = snowflake.security_admin
+  name     = upper("beginner")
+  comment  = "A role for beginner."
+}
+
+// adminのロール
+resource "snowflake_role" "admin" {
+  provider = snowflake.security_admin
+  name     = upper("admin")
+  comment  = "A role for admin."
+}
+
+// developerのロール
+resource "snowflake_role" "developer" {
+  provider = snowflake.security_admin
+  name     = upper("developer")
+  comment  = "A role for developer."
+}
+
+// analystのロール
+resource "snowflake_role" "analyst" {
+  provider = snowflake.security_admin
+  name     = upper("analyst")
+  comment  = "A role for analyst."
+}
+
+// businessのロール
+resource "snowflake_role" "business" {
+  provider = snowflake.security_admin
+  name     = upper("business")
+  comment  = "A role for business."
+}
+
+// beginnerロールに権限を付与
+resource "snowflake_role_grants" "beginner" {
+  provider               = snowflake.security_admin
+  role_name              = snowflake_role.beginner.name
+  enable_multiple_grants = true
+  roles = [
+    snowflake_role.dev_developer
+  ]
+}
+
+// adminロールに権限を付与し、ユーザを指定
+resource "snowflake_role_grants" "admin" {
+  provider               = snowflake.security_admin
+  role_name              = snowflake_role.admin.name
+  enable_multiple_grants = true
+  roles = [
+    snowflake_role.dev_admin,
+    snowflake_role.stg_admin,
+  ]
+  users = [
+    snowflake_user.admin.name,
+  ]
+}
+
+// developerロールに権限を付与、ユーザを指定
+resource "snowflake_role_grants" "developer" {
+  provider               = snowflake.security_admin
+  role_name              = snowflake_role.developer.name
+  enable_multiple_grants = true
+  roles = [
+    snowflake_role.dev_developer,
+    snowflake_role.stg_developer,
+  ]
+  users = [
+    snowflake_user.developer.name,
+  ]
+}
+
+// analystロールに権限を付与、ユーザを指定
+resource "snowflake_role_grants" "analyst" {
+  provider               = snowflake.security_admin
+  role_name              = snowflake_role.analyst.name
+  enable_multiple_grants = true
+  roles = [
+    snowflake_role.dev_analyst,
+    snowflake_role.stg_analyst,
+  ]
+  users = [
+    snowflake_user.analyst.name,
+  ]
+}
+
+// businessのロールを利用できるユーザーを指定
+resource "snowflake_role_grants" "business" {
+  provider               = snowflake.security_admin
+  role_name              = snowflake_role.business.name
+  enable_multiple_grants = true
+  users = [
+    snowflake_user.business.name,
+  ]
+}
+
 // devの管理者のロール
 resource "snowflake_role" "dev_admin" {
   provider = snowflake.security_admin
@@ -47,81 +144,4 @@ resource "snowflake_role" "stg_analyst" {
   provider = snowflake.security_admin
   name     = upper("stg_analyst")
   comment  = "A role for dev analyst."
-}
-
-// businessのロール
-resource "snowflake_role" "business" {
-  provider = snowflake.security_admin
-  name     = upper("business")
-  comment  = "A role for business."
-}
-
-// devの管理者ロールを利用できるユーザーを指定
-resource "snowflake_role_grants" "dev_admin" {
-  provider               = snowflake.security_admin
-  role_name              = snowflake_role.dev_admin.name
-  enable_multiple_grants = true
-  users = [
-    snowflake_user.admin.name,
-  ]
-}
-
-// devの開発者ロールを利用できるユーザーを指定
-resource "snowflake_role_grants" "dev_developer" {
-  provider               = snowflake.security_admin
-  role_name              = snowflake_role.dev_developer.name
-  enable_multiple_grants = true
-  users = [
-    snowflake_user.developer.name,
-  ]
-}
-
-// devのML/DSロールを利用できるユーザーを指定
-resource "snowflake_role_grants" "dev_analyst" {
-  provider               = snowflake.security_admin
-  role_name              = snowflake_role.dev_analyst.name
-  enable_multiple_grants = true
-  users = [
-    snowflake_user.analyst.name,
-  ]
-}
-
-// stgの管理者ロールを利用できるユーザーを指定
-resource "snowflake_role_grants" "stg_admin" {
-  provider               = snowflake.security_admin
-  role_name              = snowflake_role.stg_admin.name
-  enable_multiple_grants = true
-  users = [
-    snowflake_user.admin.name,
-  ]
-}
-
-// stgの開発者ロールを利用できるユーザーを指定
-resource "snowflake_role_grants" "stg_developer" {
-  provider               = snowflake.security_admin
-  role_name              = snowflake_role.stg_developer.name
-  enable_multiple_grants = true
-  users = [
-    snowflake_user.developer.name,
-  ]
-}
-
-// stgのML/DSロールを利用できるユーザーを指定
-resource "snowflake_role_grants" "stg_analyst" {
-  provider               = snowflake.security_admin
-  role_name              = snowflake_role.stg_analyst.name
-  enable_multiple_grants = true
-  users = [
-    snowflake_user.analyst.name,
-  ]
-}
-
-// businessのロールを利用できるユーザーを指定
-resource "snowflake_role_grants" "business" {
-  provider               = snowflake.security_admin
-  role_name              = snowflake_role.business.name
-  enable_multiple_grants = true
-  users = [
-    snowflake_user.business.name,
-  ]
 }
