@@ -47,6 +47,9 @@ resource "snowflake_role_grants" "beginner" {
   provider               = snowflake.security_admin
   role_name              = snowflake_role.beginner.name
   enable_multiple_grants = true
+  roles = [
+    local.snowflake_role.sysadmin,
+  ]
   users = [
     snowflake_user.beginner.name,
   ]
@@ -57,6 +60,9 @@ resource "snowflake_role_grants" "admin" {
   provider               = snowflake.security_admin
   role_name              = snowflake_role.admin.name
   enable_multiple_grants = true
+  roles = [
+    local.snowflake_role.sysadmin,
+  ]
   users = [
     snowflake_user.admin.name,
   ]
@@ -67,6 +73,9 @@ resource "snowflake_role_grants" "developer" {
   provider               = snowflake.security_admin
   role_name              = snowflake_role.developer.name
   enable_multiple_grants = true
+  roles = [
+    local.snowflake_role.sysadmin,
+  ]
   users = [
     snowflake_user.developer.name,
   ]
@@ -77,6 +86,9 @@ resource "snowflake_role_grants" "analyst" {
   provider               = snowflake.security_admin
   role_name              = snowflake_role.analyst.name
   enable_multiple_grants = true
+  roles = [
+    local.snowflake_role.sysadmin,
+  ]
   users = [
     snowflake_user.analyst.name,
   ]
@@ -87,6 +99,9 @@ resource "snowflake_role_grants" "business" {
   provider               = snowflake.security_admin
   role_name              = snowflake_role.business.name
   enable_multiple_grants = true
+  roles = [
+    local.snowflake_role.sysadmin,
+  ]
   users = [
     snowflake_user.business.name,
   ]
