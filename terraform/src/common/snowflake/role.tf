@@ -99,11 +99,31 @@ resource "snowflake_role" "dev_admin" {
   comment  = "A role for dev admin."
 }
 
+// devの管理者のロールを付与するロールを指定
+resource "snowflake_role_grants" "dev_admin" {
+  provider               = snowflake.security_admin
+  role_name              = snowflake_role.dev_admin.name
+  enable_multiple_grants = true
+  roles = [
+    snowflake_role.admin.name,
+  ]
+}
+
 // devの開発者のロール
 resource "snowflake_role" "dev_developer" {
   provider = snowflake.security_admin
   name     = upper("dev_developer")
   comment  = "A role for dev developer."
+}
+
+// devの開発者のロールを付与するロールを指定
+resource "snowflake_role_grants" "dev_developer" {
+  provider               = snowflake.security_admin
+  role_name              = snowflake_role.dev_developer.name
+  enable_multiple_grants = true
+  roles = [
+    snowflake_role.developer.name,
+  ]
 }
 
 // devのML/DSのロール
@@ -113,11 +133,31 @@ resource "snowflake_role" "dev_analyst" {
   comment  = "A role for dev analyst."
 }
 
+// devのML/DSのロールを付与するロールを指定
+resource "snowflake_role_grants" "dev_analyst" {
+  provider               = snowflake.security_admin
+  role_name              = snowflake_role.dev_analyst.name
+  enable_multiple_grants = true
+  roles = [
+    snowflake_role.analyst.name,
+  ]
+}
+
 // stgの管理者のロール
 resource "snowflake_role" "stg_admin" {
   provider = snowflake.security_admin
   name     = upper("stg_admin")
   comment  = "A role for dev admin."
+}
+
+// stgの管理者のロールを付与するロールを指定
+resource "snowflake_role_grants" "stg_admin" {
+  provider               = snowflake.security_admin
+  role_name              = snowflake_role.stg_admin.name
+  enable_multiple_grants = true
+  roles = [
+    snowflake_role.admin.name,
+  ]
 }
 
 // stgの開発者のロール
@@ -127,9 +167,29 @@ resource "snowflake_role" "stg_developer" {
   comment  = "A role for stg developer."
 }
 
+// stgの開発者のロールを付与するロールを指定
+resource "snowflake_role_grants" "stg_developer" {
+  provider               = snowflake.security_admin
+  role_name              = snowflake_role.stg_developer.name
+  enable_multiple_grants = true
+  roles = [
+    snowflake_role.developer.name,
+  ]
+}
+
 // stgのML/DSのロール
 resource "snowflake_role" "stg_analyst" {
   provider = snowflake.security_admin
   name     = upper("stg_analyst")
   comment  = "A role for dev analyst."
+}
+
+// stgのML/DSのロールを付与するロールを指定
+resource "snowflake_role_grants" "stg_analyst" {
+  provider               = snowflake.security_admin
+  role_name              = snowflake_role.stg_analyst.name
+  enable_multiple_grants = true
+  roles = [
+    snowflake_role.analyst.name,
+  ]
 }
