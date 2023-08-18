@@ -11,6 +11,7 @@ on:
           - common/github
           - common/snowflake
           - dev/snowflake
+          - stg/snowflake
       refresh_only:
         description: 'run state refresh only (not apply)'
         required: true
