@@ -31,21 +31,21 @@ resource "snowflake_role" "dev_analyst" {
 // stgの管理者のロール
 resource "snowflake_role" "stg_admin" {
   provider = snowflake.security_admin
-  name     = upper("dev_admin")
+  name     = upper("stg_admin")
   comment  = "A role for dev admin."
 }
 
 // stgの開発者のロール
-resource "snowflake_role" "dev_developer" {
+resource "snowflake_role" "stg_developer" {
   provider = snowflake.security_admin
-  name     = upper("dev_developer")
-  comment  = "A role for dev developer."
+  name     = upper("stg_developer")
+  comment  = "A role for stg developer."
 }
 
 // stgのML/DSのロール
-resource "snowflake_role" "dev_analyst" {
+resource "snowflake_role" "stg_analyst" {
   provider = snowflake.security_admin
-  name     = upper("dev_analyst")
+  name     = upper("stg_analyst")
   comment  = "A role for dev analyst."
 }
 
