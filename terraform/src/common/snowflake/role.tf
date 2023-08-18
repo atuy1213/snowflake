@@ -50,6 +50,9 @@ resource "snowflake_role_grants" "beginner" {
   roles = [
     snowflake_role.dev_developer.name,
   ]
+  users = [
+    snowflake_user.beginner.name,
+  ]
 }
 
 // adminロールに権限を付与し、ユーザを指定
