@@ -42,56 +42,41 @@ resource "snowflake_role" "business" {
   comment  = "A role for business."
 }
 
-// beginnerロールに権限を付与
+// beginnerロールにユーザを指定
 resource "snowflake_role_grants" "beginner" {
   provider               = snowflake.security_admin
   role_name              = snowflake_role.beginner.name
   enable_multiple_grants = true
-  roles = [
-    snowflake_role.dev_developer.name,
-  ]
   users = [
     snowflake_user.beginner.name,
   ]
 }
 
-// adminロールに権限を付与し、ユーザを指定
+// adminロールにユーザを指定
 resource "snowflake_role_grants" "admin" {
   provider               = snowflake.security_admin
   role_name              = snowflake_role.admin.name
   enable_multiple_grants = true
-  roles = [
-    snowflake_role.dev_admin.name,
-    snowflake_role.stg_admin.name,
-  ]
   users = [
     snowflake_user.admin.name,
   ]
 }
 
-// developerロールに権限を付与、ユーザを指定
+// developerロールにユーザを指定
 resource "snowflake_role_grants" "developer" {
   provider               = snowflake.security_admin
   role_name              = snowflake_role.developer.name
   enable_multiple_grants = true
-  roles = [
-    snowflake_role.dev_developer.name,
-    snowflake_role.stg_developer.name,
-  ]
   users = [
     snowflake_user.developer.name,
   ]
 }
 
-// analystロールに権限を付与、ユーザを指定
+// analystロールにユーザを指定
 resource "snowflake_role_grants" "analyst" {
   provider               = snowflake.security_admin
   role_name              = snowflake_role.analyst.name
   enable_multiple_grants = true
-  roles = [
-    snowflake_role.dev_analyst.name,
-    snowflake_role.stg_analyst.name,
-  ]
   users = [
     snowflake_user.analyst.name,
   ]
