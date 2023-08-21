@@ -18,7 +18,3 @@ resource "snowflake_schema" "report" {
 output "snowflake_database_raw_name" {
   value = snowflake_database.raw.name
 }
-
-output "snowflake_schema_report_name" {
-  value = snowflake_schema.report.name
-}

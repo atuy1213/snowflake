@@ -10,7 +10,7 @@ locals {
 // dbt用のロール
 resource "snowflake_role" "dbt" {
   provider = snowflake.security_admin
-  name     = upper("${var.environment}-dbt")
+  name     = upper("${var.environment}_dbt")
   comment  = "A role for ${var.environment} dbt."
 }
 
@@ -33,10 +33,21 @@ resource "snowflake_grant_privileges_to_role" "dbt_database_raw" {
     object_name = snowflake_database.raw.name
   }
 }
+
 resource "snowflake_grant_privileges_to_role" "dbt_schema_report" {
   role_name  = snowflake_role.dbt.name
   privileges = ["USAGE"]
   on_schema {
-    schema_name = "${snowflake_database.raw.name}.${snowflake_schema.report.name}"
+    future_schemas_in_database = snowflake_database.raw.name
+  }
+}
+
+resource "snowflake_grant_privileges_to_role" "dbt_warehouse" {
+  for_each   = snowflake_warehouse.dbt
+  role_name  = snowflake_role.dbt.name
+  privileges = ["USAGE"]
+  on_account_object {
+    object_type = "WAREHOUSE"
+    object_name = each.value.name
   }
 }

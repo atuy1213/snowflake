@@ -12,14 +12,3 @@ resource "snowflake_warehouse" "dbt" {
   initially_suspended          = true
   enable_query_acceleration    = false
 }
-
-// dbt ロールに dbt Warehouse の USAGE 権限を付与
-resource "snowflake_warehouse_grant" "dbt" {
-  provider       = snowflake.security_admin
-  for_each       = snowflake_warehouse.dbt
-  warehouse_name = each.value.name
-  privilege      = "USAGE"
-  roles = [
-    snowflake_role.dbt.name,
-  ]
-}
