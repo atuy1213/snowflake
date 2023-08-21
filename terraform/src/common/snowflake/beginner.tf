@@ -32,6 +32,6 @@ resource "snowflake_grant_privileges_to_role" "beginner_schema_report" {
   role_name  = snowflake_role.beginner.name
   privileges = ["USAGE"]
   on_schema {
-    schema_name = data.terraform_remote_state.dev_snowflake.outputs.snowflake_schema_report_name
+    future_schemas_in_database = data.terraform_remote_state.dev_snowflake.outputs.snowflake_database_raw_name
   }
 }

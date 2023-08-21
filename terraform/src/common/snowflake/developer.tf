@@ -67,7 +67,7 @@ resource "snowflake_grant_privileges_to_role" "dev_developer_schema_report" {
   role_name  = snowflake_role.dev_developer.name
   privileges = ["USAGE"]
   on_schema {
-    schema_name = data.terraform_remote_state.dev_snowflake.outputs.snowflake_schema_report_name
+    future_schemas_in_database = data.terraform_remote_state.dev_snowflake.outputs.snowflake_database_raw_name
   }
 }
 
@@ -85,6 +85,6 @@ resource "snowflake_grant_privileges_to_role" "stg_developer_schema_report" {
   role_name  = snowflake_role.stg_developer.name
   privileges = ["USAGE"]
   on_schema {
-    schema_name = data.terraform_remote_state.stg_snowflake.outputs.snowflake_schema_report_name
+    future_schemas_in_database = data.terraform_remote_state.stg_snowflake.outputs.snowflake_database_raw_name
   }
 }
