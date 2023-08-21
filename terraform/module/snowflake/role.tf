@@ -37,6 +37,6 @@ resource "snowflake_grant_privileges_to_role" "dbt_schema_report" {
   role_name  = snowflake_role.dbt.name
   privileges = ["USAGE"]
   on_schema {
-    schema_name = snowflake_schema.report.name
+    scheschema_name = "${snowflake_database.raw.name}.${snowflake_schema.report.name}"
   }
 }
