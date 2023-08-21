@@ -12,7 +12,6 @@ resource "snowflake_database_grant" "grant" {
   roles = [
     local.snowflake_role.sysadmin,
     snowflake_role.dbt.name,
-    local.snowflake_role.admin,
     local.snowflake_role.developer,
   ]
 }
@@ -33,9 +32,9 @@ resource "snowflake_schema_grant" "grant" {
   schema_name   = snowflake_schema.report.name
   privilege     = "USAGE"
   roles = [
-    snowflake_role.dbt.name,
-    local.snowflake_role.admin,
+    local.snowflake_role.sysadmin,
     local.snowflake_role.developer,
+    snowflake_role.dbt.name,
   ]
 }
 
@@ -44,8 +43,8 @@ resource "snowflake_table_grant" "select_example_db" {
   database_name = snowflake_database.example.name
   privilege     = "SELECT"
   roles = [
+    local.snowflake_role.sysadmin,
     snowflake_role.dbt.name,
-    local.snowflake_role.admin,
   ]
   on_future = true
 }

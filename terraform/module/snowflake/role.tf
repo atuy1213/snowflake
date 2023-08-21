@@ -4,10 +4,9 @@ locals {
     sysadmin      = "SYSADMIN"
     securityadmin = "SECURITYADMIN"
     terraform     = "TERRAFORM" // Created by console
-    admin         = upper("${var.environment}_admin")
     developer     = upper("${var.environment}_developer")
     analyst       = upper("${var.environment}_analyst")
-    buisiess      = upper("buisiess")
+    buisiess      = upper("business")
   }
 }
 
