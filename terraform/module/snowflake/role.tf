@@ -28,12 +28,14 @@ resource "snowflake_role_grants" "dbt" {
 resource "snowflake_grant_privileges_to_role" "g3" {
   role_name  = snowflake_role.dbt.name
   privileges = ["USAGE"]
-
   on_account_object {
     object_type = "DATABASE"
     object_name = snowflake_database.raw.name
   }
-
+}
+resource "snowflake_grant_privileges_to_role" "g3" {
+  role_name  = snowflake_role.dbt.name
+  privileges = ["USAGE"]
   on_account_object {
     object_type = "SCHEMA"
     object_name = snowflake_schema.report.name
