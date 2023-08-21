@@ -25,7 +25,7 @@ resource "snowflake_role_grants" "dbt" {
 }
 
 // dbtロールに権限を付与
-resource "snowflake_grant_privileges_to_role" "g3" {
+resource "snowflake_grant_privileges_to_role" "dbt_database_raw" {
   role_name  = snowflake_role.dbt.name
   privileges = ["USAGE"]
   on_account_object {
@@ -33,7 +33,7 @@ resource "snowflake_grant_privileges_to_role" "g3" {
     object_name = snowflake_database.raw.name
   }
 }
-resource "snowflake_grant_privileges_to_role" "g3" {
+resource "snowflake_grant_privileges_to_role" "dbt_schema_report" {
   role_name  = snowflake_role.dbt.name
   privileges = ["USAGE"]
   on_account_object {
