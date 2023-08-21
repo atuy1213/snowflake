@@ -4,9 +4,6 @@ locals {
     sysadmin      = "SYSADMIN"
     securityadmin = "SECURITYADMIN"
     terraform     = "TERRAFORM" // Created by console
-    developer     = upper("${var.environment}_developer")
-    analyst       = upper("${var.environment}_analyst")
-    buisiess      = upper("business")
   }
 }
 
@@ -25,4 +22,20 @@ resource "snowflake_role_grants" "dbt" {
   users = [
     snowflake_user.dbt.name,
   ]
+}
+
+// dbtロールに権限を付与
+resource "snowflake_grant_privileges_to_role" "g3" {
+  role_name  = snowflake_role.dbt.name
+  privileges = ["USAGE"]
+
+  on_account_object {
+    object_type = "DATABASE"
+    object_name = snowflake_database.raw.name
+  }
+
+  on_account_object {
+    object_type = "SCHEMA"
+    object_name = snowflake_schema.report.name
+  }
 }
