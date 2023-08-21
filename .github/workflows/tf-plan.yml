@@ -42,6 +42,7 @@ jobs:
           - common/github
           - common/snowflake
           - dev/snowflake
+          - stg/snowflake
     steps:
       - uses: actions/checkout@v3
 
