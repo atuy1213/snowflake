@@ -35,7 +35,7 @@ resource "snowflake_warehouse" "business" {
 
 resource "snowflake_grant_privileges_to_role" "business_warehouse" {
   for_each   = snowflake_warehouse.business
-  role_name  = local.snowflake_role.sysadmin
+  role_name  = snowflake_role.business.name
   privileges = ["USAGE"]
   on_account_object {
     object_type = "WAREHOUSE"

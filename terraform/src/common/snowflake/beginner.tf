@@ -46,7 +46,7 @@ resource "snowflake_grant_privileges_to_role" "beginner_database_raw" {
 
 resource "snowflake_grant_privileges_to_role" "beginner_warehouse" {
   for_each   = snowflake_warehouse.beginner
-  role_name  = local.snowflake_role.sysadmin
+  role_name  = snowflake_role.beginner.name
   privileges = ["USAGE"]
   on_account_object {
     object_type = "WAREHOUSE"

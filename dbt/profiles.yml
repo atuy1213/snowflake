@@ -1,0 +1,14 @@
+merlot-snowflake:
+  target: merlot-snowflake
+  outputs:
+    merlot-snowflake:
+      account: "{{ env_var('SNOWFLAKE_ACCOUNT') }}.{{ env_var('SNOWFLAKE_REGION') }}"
+      password: "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role: "{{ env_var('SNOWFLAKE_ROLE') }}"
+      threads: 4
+      type: snowflake
+      user: "{{ env_var('SNOWFLAKE_USER', 'dbt_user') }}"
+      warehouse: "{{ env_var('SNOWFLAKE_WAREHOUSE', 'STG_WH_QUERY_SMALL') }}"
+      client_session_keep_alive: False
+      database: "{{ env_var('SNOWFLAKE_DATABASE', 'STG_RAW_DB') }}"
+      schema: dmp

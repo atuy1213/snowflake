@@ -72,7 +72,7 @@ resource "snowflake_role_grants" "stg_developer" {
 // dev_developerロールに権限を付与
 resource "snowflake_grant_privileges_to_role" "dev_developer_warehouse" {
   for_each   = snowflake_warehouse.developer
-  role_name  = local.snowflake_role.dev_developer.name
+  role_name  = snowflake_role.dev_developer.name
   privileges = ["USAGE"]
   on_account_object {
     object_type = "WAREHOUSE"
@@ -108,7 +108,7 @@ resource "snowflake_grant_privileges_to_role" "dev_developer_dev_future_schema_i
 // stg_developerロールに権限を付与
 resource "snowflake_grant_privileges_to_role" "stg_developer_warehouse" {
   for_each   = snowflake_warehouse.developer
-  role_name  = local.snowflake_role.stg_developer.name
+  role_name  = snowflake_role.stg_developer.name
   privileges = ["USAGE"]
   on_account_object {
     object_type = "WAREHOUSE"
