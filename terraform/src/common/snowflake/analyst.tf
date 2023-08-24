@@ -53,7 +53,7 @@ resource "snowflake_role_grants" "dev_analyst" {
 
 resource "snowflake_grant_privileges_to_role" "dev_analyst_warehouse" {
   for_each   = snowflake_warehouse.analyst
-  role_name  = local.snowflake_role.dev_analyst
+  role_name  = local.snowflake_role.dev_analyst.name
   privileges = ["USAGE"]
   on_account_object {
     object_type = "WAREHOUSE"
@@ -80,7 +80,7 @@ resource "snowflake_role_grants" "stg_analyst" {
 
 resource "snowflake_grant_privileges_to_role" "stg_analyst_warehouse" {
   for_each   = snowflake_warehouse.analyst
-  role_name  = local.snowflake_role.stg_analyst
+  role_name  = local.snowflake_role.stg_analyst.name
   privileges = ["USAGE"]
   on_account_object {
     object_type = "WAREHOUSE"
