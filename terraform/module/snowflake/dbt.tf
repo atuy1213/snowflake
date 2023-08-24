@@ -49,7 +49,15 @@ resource "snowflake_grant_privileges_to_role" "dbt_database_raw" {
   }
 }
 
-resource "snowflake_grant_privileges_to_role" "dbt_schema_report" {
+resource "snowflake_grant_privileges_to_role" "dbt_all_schema_in_raw" {
+  role_name  = snowflake_role.dbt.name
+  privileges = ["USAGE"]
+  on_schema {
+    all_schemas_in_database = snowflake_database.raw.name
+  }
+}
+
+resource "snowflake_grant_privileges_to_role" "dbt_future_schema_in_raw" {
   role_name  = snowflake_role.dbt.name
   privileges = ["USAGE"]
   on_schema {

@@ -18,6 +18,22 @@ resource "snowflake_role" "analyst" {
   comment  = "A role for analyst."
 }
 
+// admin 用の Warehouse を作成
+resource "snowflake_warehouse" "analyst" {
+  for_each = toset(["xsmall", "small", "medium", "large"])
+
+  provider                     = snowflake.sys_admin
+  name                         = upper("wh_analyst_${each.key}")
+  comment                      = "Warehouse for analyst on ${each.key} size"
+  warehouse_size               = each.key
+  auto_resume                  = true
+  auto_suspend                 = 60
+  statement_timeout_in_seconds = 3600 // 1 hour
+  initially_suspended          = true
+  enable_query_acceleration    = false
+}
+
+
 // dev_analystのロール
 resource "snowflake_role" "dev_analyst" {
   provider = snowflake.security_admin
@@ -35,6 +51,16 @@ resource "snowflake_role_grants" "dev_analyst" {
   ]
 }
 
+resource "snowflake_grant_privileges_to_role" "dev_analyst_warehouse" {
+  for_each   = snowflake_warehouse.analyst
+  role_name  = local.snowflake_role.dev_analyst
+  privileges = ["USAGE"]
+  on_account_object {
+    object_type = "WAREHOUSE"
+    object_name = each.value.name
+  }
+}
+
 // stg_analystのロール
 resource "snowflake_role" "stg_analyst" {
   provider = snowflake.security_admin
@@ -50,4 +76,14 @@ resource "snowflake_role_grants" "stg_analyst" {
   roles = [
     snowflake_role.analyst.name,
   ]
+}
+
+resource "snowflake_grant_privileges_to_role" "stg_analyst_warehouse" {
+  for_each   = snowflake_warehouse.analyst
+  role_name  = local.snowflake_role.stg_analyst
+  privileges = ["USAGE"]
+  on_account_object {
+    object_type = "WAREHOUSE"
+    object_name = each.value.name
+  }
 }

@@ -8,7 +8,32 @@ resource "snowflake_role_grants" "admin" {
   ]
 }
 
+// admin 用の Warehouse を作成
+resource "snowflake_warehouse" "admin" {
+  for_each = toset(["xsmall", "small", "medium", "large"])
+
+  provider                     = snowflake.sys_admin
+  name                         = upper("wh_admin_${each.key}")
+  comment                      = "Warehouse for sysadmin on ${each.key} size"
+  warehouse_size               = each.key
+  auto_resume                  = true
+  auto_suspend                 = 60
+  statement_timeout_in_seconds = 3600 // 1 hour
+  initially_suspended          = true
+  enable_query_acceleration    = false
+}
+
 // adminロールに権限を付与
+resource "snowflake_grant_privileges_to_role" "admin_warehouse" {
+  for_each   = snowflake_warehouse.admin
+  role_name  = local.snowflake_role.sysadmin
+  privileges = ["USAGE"]
+  on_account_object {
+    object_type = "WAREHOUSE"
+    object_name = each.value.name
+  }
+}
+
 resource "snowflake_grant_privileges_to_role" "admin_stg_database_raw" {
   role_name      = local.snowflake_role.sysadmin
   all_privileges = true
@@ -18,7 +43,16 @@ resource "snowflake_grant_privileges_to_role" "admin_stg_database_raw" {
   }
 }
 
-resource "snowflake_grant_privileges_to_role" "admin_stg_schema_report" {
+
+resource "snowflake_grant_privileges_to_role" "admin_stg_all_schema_in_raw" {
+  role_name      = local.snowflake_role.sysadmin
+  all_privileges = true
+  on_schema {
+    all_schemas_in_database = data.terraform_remote_state.dev_snowflake.outputs.snowflake_database_raw_name
+  }
+}
+
+resource "snowflake_grant_privileges_to_role" "admin_stg_future_schema_in_raw" {
   role_name      = local.snowflake_role.sysadmin
   all_privileges = true
   on_schema {
@@ -35,7 +69,15 @@ resource "snowflake_grant_privileges_to_role" "admin_dev_database_raw" {
   }
 }
 
-resource "snowflake_grant_privileges_to_role" "admin_dev_schema_report" {
+resource "snowflake_grant_privileges_to_role" "admin_dev_all_schema_in_raw" {
+  role_name      = local.snowflake_role.sysadmin
+  all_privileges = true
+  on_schema {
+    all_schemas_in_database = data.terraform_remote_state.stg_snowflake.outputs.snowflake_database_raw_name
+  }
+}
+
+resource "snowflake_grant_privileges_to_role" "admin_dev_future_schema_in_raw" {
   role_name      = local.snowflake_role.sysadmin
   all_privileges = true
   on_schema {
