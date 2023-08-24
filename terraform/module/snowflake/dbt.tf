@@ -1,9 +1,14 @@
 // dbt用のユーザ
 resource "snowflake_user" "dbt" {
   provider     = snowflake.user_admin
-  name         = "${var.environment}_dbt"
+  name         = upper("${var.environment}_dbt")
+  password     = data.aws_ssm_parameter.dbt_password.value
   default_role = snowflake_role.dbt.name
   comment      = "Created by Terraform."
+}
+
+data "aws_ssm_parameter" "dbt_password" {
+  name = "/github.com/atuy1213/snowflake/dbt/${var.environment}/user/password"
 }
 
 // dbt用のロール
