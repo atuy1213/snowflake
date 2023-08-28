@@ -49,8 +49,8 @@ resource "snowflake_warehouse" "dbt" {
 
 // dbtロールに権限を付与
 resource "snowflake_grant_privileges_to_role" "dbt_database_raw" {
-  role_name  = snowflake_role.dbt.name
-  privileges = ["USAGE"]
+  role_name      = snowflake_role.dbt.name
+  all_privileges = true
   on_account_object {
     object_type = "DATABASE"
     object_name = snowflake_database.raw.name
