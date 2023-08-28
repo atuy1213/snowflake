@@ -23,6 +23,9 @@ resource "snowflake_role_grants" "dbt" {
   provider               = snowflake.security_admin
   role_name              = snowflake_role.dbt.name
   enable_multiple_grants = true
+  roles = [
+    local.snowflake_role.accountadmin,
+  ]
   users = [
     snowflake_user.dbt.name,
   ]
