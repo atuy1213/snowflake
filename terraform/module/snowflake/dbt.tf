@@ -58,16 +58,16 @@ resource "snowflake_grant_privileges_to_role" "dbt_database_raw" {
 }
 
 resource "snowflake_grant_privileges_to_role" "dbt_all_schema_in_raw" {
-  role_name  = snowflake_role.dbt.name
-  privileges = ["USAGE"]
+  role_name      = snowflake_role.dbt.name
+  all_privileges = true
   on_schema {
     all_schemas_in_database = snowflake_database.raw.name
   }
 }
 
 resource "snowflake_grant_privileges_to_role" "dbt_future_schema_in_raw" {
-  role_name  = snowflake_role.dbt.name
-  privileges = ["USAGE"]
+  role_name      = snowflake_role.dbt.name
+  all_privileges = true
   on_schema {
     future_schemas_in_database = snowflake_database.raw.name
   }
