@@ -1,0 +1,29 @@
+version: 2
+
+sources:
+  - name: ADLOG
+    description: ADLOGのRAWデータ
+    database: "{{ env_var('ENVIRONMENT') }}_RAW"
+    schema: ADLOG
+    tables:
+      - name: LOG
+        description: adlog
+        columns:
+          - name: TRACKING_ID
+            description: トラッキングID
+            tests:
+              - not_null
+          - name: ADGROUP_ID
+            description: 広告グループID
+            tests:
+              - not_null
+          - name: AD_ID
+            description: 広告ID
+            tests:
+              - not_null
+          - name: LOG_TYPE
+            description: ログタイプ
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ['imp', 'click', 'cv']

@@ -1,6 +1,0 @@
-services:
-  dbt: # AuroraDB uses MySQL, so, this service name is correct.
-    build: .
-    volumes:
-      - ./:/dbt
-    tty: true

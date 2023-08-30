@@ -1,8 +1,8 @@
-name: 'merlot'
+name: "snowflake"
 config-version: 2
-version: '1.0.0'
+version: "1.0.0"
 
-profile: 'merlot_snowflake'
+profile: "snowflake"
 
 model-paths: ["models"]
 analysis-paths: ["analysis"]
@@ -15,5 +15,10 @@ target-path: "target"
 clean-targets: [target, dbt_packages]
 
 models:
-  dbt_training:
-    example:
+  snowflake:
+    marts:
+      materialized: table
+      database: "{{ env_var('ENVIRONMENT') }}_MART"
+    staging:
+      materialized: table
+      database: "{{ env_var('ENVIRONMENT') }}_STAGING"
