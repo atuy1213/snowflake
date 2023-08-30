@@ -1,34 +1,72 @@
 name: migrate-snowflake
+run-name: migrate-snowflake (${{ inputs.env }})
 
 on:
   workflow_dispatch:
+    inputs:
+      env:
+        description: 'environment'
+        required: true
+        type: choice
+        options:
+          - DEV
+          - STG
+      dry-run:
+        description: 'dry-run'
+        required: true
+        default: true
+        type: boolean
 
 jobs:
   migrate-snowflake:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Use Python 3.9.x
-        uses: actions/setup-python@v2.2.1
+        uses: actions/setup-python@v4
         with:
           python-version: 3.9.x
 
       - name: Setup schemachange
         run: |
+          pip install -U pip
           pip install schemachange==3.5.3
 
       - name: Run schemachange
+        if: ${{ !inputs.dry-run }}
         env:
+          ENVIRONMENT: ${{ inputs.env }}
           SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
-          SNOWFLAKE_USERNAME: ${{ secrets.SNOWFLAKE_USERNAME }}
-          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE }}
-          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE }}
-          SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE }}
-          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD }}
+          SNOWFLAKE_REGION: "ap-northeast-1.aws"
+          SNOWFLAKE_USER: ${{ inputs.env }}_MIGRATION
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_MIGRATION_PASSWORD }}
+          SNOWFLAKE_ROLE: ${{ inputs.env }}_MIGRATION
+          SNOWFLAKE_WAREHOUSE: ${{ inputs.env }}_WH_MIGRATION_XSMALL
+          SNOWFLAKE_DATABASE: ${{ inputs.env }}_RAW
         run: |
-          schemachange -f schema/snowflake/ddl \
+          schemachange -f schema/snowflake/raw/ddl \
+            -a $SNOWFLAKE_ACCOUNT.$SNOWFLAKE_REGION \
+            -u $SNOWFLAKE_USER \
+            -r $SNOWFLAKE_ROLE \
+            -w $SNOWFLAKE_WAREHOUSE \
+            -d $SNOWFLAKE_DATABASE \
+            -c $SNOWFLAKE_DATABASE.SCHEMACHANGE.CHANGE_HISTORY
+      
+      - name: Dry-Run schemachange
+        if: ${{ inputs.dry-run }}
+        env:
+          ENVIRONMENT: ${{ inputs.env }}
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+          SNOWFLAKE_REGION: "ap-northeast-1.aws"
+          SNOWFLAKE_USER: ${{ inputs.env }}_MIGRATION
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_MIGRATION_PASSWORD }}
+          SNOWFLAKE_ROLE: ${{ inputs.env }}_MIGRATION
+          SNOWFLAKE_WAREHOUSE: ${{ inputs.env }}_WH_MIGRATION_XSMALL
+          SNOWFLAKE_DATABASE: ${{ inputs.env }}_RAW
+        run: |
+          schemachange -f schema/snowflake/raw/ddl \
             -a $SNOWFLAKE_ACCOUNT.$SNOWFLAKE_REGION \
             -u $SNOWFLAKE_USER \
             -r $SNOWFLAKE_ROLE \
