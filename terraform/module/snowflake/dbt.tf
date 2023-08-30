@@ -70,14 +70,6 @@ resource "snowflake_grant_privileges_to_role" "dbt_database_raw" {
   }
 }
 
-resource "snowflake_grant_privileges_to_role" "dbt_all_schema_in_raw" {
-  role_name      = snowflake_role.dbt.name
-  all_privileges = true
-  on_schema {
-    all_schemas_in_database = snowflake_database.raw.name
-  }
-}
-
 resource "snowflake_grant_privileges_to_role" "dbt_future_schema_in_raw" {
   role_name      = snowflake_role.dbt.name
   all_privileges = true
@@ -97,17 +89,6 @@ resource "snowflake_grant_privileges_to_role" "dbt_future_table_in_raw" {
   }
 }
 
-resource "snowflake_grant_privileges_to_role" "dbt_all_table_in_raw" {
-  role_name      = snowflake_role.dbt.name
-  all_privileges = true
-  on_schema_object {
-    all {
-      object_type_plural = "TABLES"
-      in_database        = snowflake_database.raw.name
-    }
-  }
-}
-
 // STAGING DATABASE
 resource "snowflake_grant_privileges_to_role" "dbt_database_staging" {
   role_name      = snowflake_role.dbt.name
@@ -115,14 +96,6 @@ resource "snowflake_grant_privileges_to_role" "dbt_database_staging" {
   on_account_object {
     object_type = "DATABASE"
     object_name = snowflake_database.staging.name
-  }
-}
-
-resource "snowflake_grant_privileges_to_role" "dbt_all_schema_in_staging" {
-  role_name      = snowflake_role.dbt.name
-  all_privileges = true
-  on_schema {
-    all_schemas_in_database = snowflake_database.staging.name
   }
 }
 
@@ -145,33 +118,13 @@ resource "snowflake_grant_privileges_to_role" "dbt_future_table_in_staging" {
   }
 }
 
-resource "snowflake_grant_privileges_to_role" "dbt_all_table_in_staging" {
-  role_name      = snowflake_role.dbt.name
-  all_privileges = true
-  on_schema_object {
-    all {
-      object_type_plural = "TABLES"
-      in_database        = snowflake_database.staging.name
-    }
-  }
-}
-
 // MART DATABASE
-
 resource "snowflake_grant_privileges_to_role" "dbt_database_mart" {
   role_name      = snowflake_role.dbt.name
   all_privileges = true
   on_account_object {
     object_type = "DATABASE"
     object_name = snowflake_database.mart.name
-  }
-}
-
-resource "snowflake_grant_privileges_to_role" "dbt_all_schema_in_mart" {
-  role_name      = snowflake_role.dbt.name
-  all_privileges = true
-  on_schema {
-    all_schemas_in_database = snowflake_database.mart.name
   }
 }
 
@@ -188,17 +141,6 @@ resource "snowflake_grant_privileges_to_role" "dbt_future_table_in_mart" {
   all_privileges = true
   on_schema_object {
     future {
-      object_type_plural = "TABLES"
-      in_database        = snowflake_database.mart.name
-    }
-  }
-}
-
-resource "snowflake_grant_privileges_to_role" "dbt_all_table_in_mart" {
-  role_name      = snowflake_role.dbt.name
-  all_privileges = true
-  on_schema_object {
-    all {
       object_type_plural = "TABLES"
       in_database        = snowflake_database.mart.name
     }
