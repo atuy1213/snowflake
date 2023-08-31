@@ -1,11 +1,20 @@
-name: terraform-plan
+name: terraform-destroy
+run-name: terraform-destroy (${{ github.event.inputs.stack }})
 
 on:
-  pull_request:
-    paths:
-      - ".github/workflows/tf-plan.yml"
-      - "terraform/**"
   workflow_dispatch:
+    inputs:
+      stack:
+        description: 'Target Stack'
+        required: true
+        type: choice
+        options:
+          - common/github
+          - common/snowflake
+          - dev/aws
+          - dev/snowflake
+          - stg/aws
+          - stg/snowflake
 
 env:
   AWS_ACCOUNT_ID: ${{ secrets.AWS_ACCOUNT_ID }}
@@ -25,7 +34,7 @@ env:
   SNOWFLAKE_WAREHOUSE: "TERRAFORM_WH"
 
 jobs:
-  tf-plan:
+  tf-destroy:
     runs-on: ubuntu-22.04
     timeout-minutes: 60
     permissions:
@@ -36,35 +45,20 @@ jobs:
     defaults:
       run:
         working-directory: ./terraform/src
-    strategy:
-      matrix:
-        path:
-          - common/github
-          - common/snowflake
-          - dev/aws
-          - dev/snowflake
-          - stg/aws
-          - stg/snowflake
     steps:
       - uses: actions/checkout@v3
+
+      - uses: aws-actions/configure-aws-credentials@master
+        with:
+          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github.com-atuy1213-snowflake-github-actions-rw-role
+          aws-region: ${{ env.AWS_REGION }}
 
       - uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
-      - uses: aws-actions/configure-aws-credentials@master
-        with:
-          role-to-assume: arn:aws:iam::${{ env.AWS_ACCOUNT_ID }}:role/github.com-atuy1213-snowflake-github-actions-ro-role
-          aws-region: ${{ env.AWS_REGION }}
-
-      - name: Check format
-        run: terraform fmt -check -recursive
-
       - name: Init
-        run: terraform -chdir=${{ matrix.path }} init -upgrade -no-color
+        run: terraform -chdir=${{ inputs.stack }} init -upgrade -no-color
 
-      - name: Check validate
-        run: terraform -chdir=${{ matrix.path }} validate
-
-      - name: Plan
-        run: terraform -chdir=${{ matrix.path }} plan -no-color -input=false
+      - name: Destroy
+        run: terraform -chdir=${{ inputs.stack }} destroy -no-color -auto-approve
