@@ -1,4 +1,5 @@
 name: terraform-apply
+run-name: terraform-apply (${{ github.event.inputs.stack }})
 
 on:
   workflow_dispatch:
@@ -60,15 +61,15 @@ jobs:
           terraform_version: ${{ env.TF_VERSION }}
 
       - name: Init
-        run: terraform -chdir=${{ github.event.inputs.stack }} init -upgrade -no-color
+        run: terraform -chdir=${{ inputs.stack }} init -upgrade -no-color
 
       - name: Plan
-        run: terraform -chdir=${{ github.event.inputs.stack }} plan -no-color -input=false
+        run: terraform -chdir=${{ inputs.stack }} plan -no-color -input=false
 
       - name: Refresh
-        if: ${{ github.event.inputs.refresh_only == 'true' }}
-        run: terraform -chdir=${{ github.event.inputs.stack }} apply -no-color -refresh-only -auto-approve
+        if: ${{ inputs.refresh_only == 'true' }}
+        run: terraform -chdir=${{ inputs.stack }} apply -no-color -refresh-only -auto-approve
 
       - name: Apply
-        if: ${{ github.event.inputs.refresh_only == 'false' }}
-        run: terraform -chdir=${{ github.event.inputs.stack }} apply -no-color -auto-approve
+        if: ${{ inputs.refresh_only == 'false' }}
+        run: terraform -chdir=${{ inputs.stack }} apply -no-color -auto-approve
