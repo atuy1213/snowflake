@@ -18,19 +18,6 @@ resource "snowflake_role" "migration" {
   comment  = "A role for ${var.environment} migration."
 }
 
-// migrationロールをmigrationユーザに付与
-resource "snowflake_role_grants" "migration" {
-  provider               = snowflake.security_admin
-  role_name              = snowflake_role.migration.name
-  enable_multiple_grants = true
-  roles = [
-    local.snowflake_role.accountadmin,
-  ]
-  users = [
-    snowflake_user.migration.name,
-  ]
-}
-
 // migration 用の Warehouse を作成
 resource "snowflake_warehouse" "migration" {
   provider                     = snowflake.sys_admin
@@ -44,32 +31,20 @@ resource "snowflake_warehouse" "migration" {
   enable_query_acceleration    = false
 }
 
+// migrationロールをmigrationユーザに付与
+resource "snowflake_role_grants" "migration" {
+  provider               = snowflake.security_admin
+  role_name              = snowflake_role.migration.name
+  enable_multiple_grants = true
+  roles = [
+    local.snowflake_role.accountadmin,
+  ]
+  users = [
+    snowflake_user.migration.name,
+  ]
+}
 
 // migrationロールに権限を付与
-resource "snowflake_grant_privileges_to_role" "migration_database_raw" {
-  role_name  = snowflake_role.migration.name
-  privileges = ["USAGE"]
-  on_account_object {
-    object_type = "DATABASE"
-    object_name = snowflake_database.raw.name
-  }
-}
-
-resource "snowflake_grant_privileges_to_role" "migration_all_schema_in_raw" {
-  role_name  = snowflake_role.migration.name
-  privileges = ["USAGE"]
-  on_schema {
-    all_schemas_in_database = snowflake_database.raw.name
-  }
-}
-
-resource "snowflake_grant_privileges_to_role" "migration_future_schema_in_raw" {
-  role_name  = snowflake_role.migration.name
-  privileges = ["USAGE"]
-  on_schema {
-    future_schemas_in_database = snowflake_database.raw.name
-  }
-}
 
 resource "snowflake_grant_privileges_to_role" "migration_warehouse" {
   role_name  = snowflake_role.migration.name
@@ -80,22 +55,36 @@ resource "snowflake_grant_privileges_to_role" "migration_warehouse" {
   }
 }
 
-resource "snowflake_grant_privileges_to_role" "future_table" {
+resource "snowflake_grant_privileges_to_role" "migration_database_raw" {
+  role_name  = snowflake_role.migration.name
+  privileges = ["USAGE"]
+  on_account_object {
+    object_type = "DATABASE"
+    object_name = snowflake_database.raw.name
+  }
+}
+
+resource "snowflake_grant_privileges_to_role" "migration_raw_schemachange_schema" {
+  role_name      = snowflake_role.migration.name
+  all_privileges = true
+  on_schema {
+    schema_name = "${snowflake_database.raw.name}.${snowflake_schema.raw_schemachange.name}"
+  }
+}
+
+resource "snowflake_grant_privileges_to_role" "migration_raw_adlog_schema" {
+  role_name      = snowflake_role.migration.name
+  all_privileges = true
+  on_schema {
+    schema_name = "${snowflake_database.raw.name}.${snowflake_schema.raw_adlog.name}"
+  }
+}
+
+resource "snowflake_grant_privileges_to_role" "migration_future_table_in_raw" {
   role_name      = snowflake_role.migration.name
   all_privileges = true
   on_schema_object {
     future {
-      object_type_plural = "TABLES"
-      in_database        = snowflake_database.raw.name
-    }
-  }
-}
-
-resource "snowflake_grant_privileges_to_role" "all_table" {
-  role_name      = snowflake_role.migration.name
-  all_privileges = true
-  on_schema_object {
-    all {
       object_type_plural = "TABLES"
       in_database        = snowflake_database.raw.name
     }
