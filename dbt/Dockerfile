@@ -1,9 +1,11 @@
-FROM python:3.9
+FROM python:3.9-slim
 
-ENV DBT_CORE_VERSION=1.6.1
-ENV DBT_SNOWFLAKE_VERSION=1.6.1
-RUN pip install -U pip
-RUN pip install dbt-core==${DBT_CORE_VERSION} dbt-snowflake==${DBT_SNOWFLAKE_VERSION}
+RUN apt-get update \
+    && apt-get install -y git \
+    && rm -rf /var/lib/apt/lists/*
+
+RUN pip install -U pip \
+    && pip install dbt-core==1.6.1 dbt-snowflake==1.6.1
 
 COPY . /dbt
 WORKDIR /dbt
