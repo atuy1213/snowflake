@@ -16,10 +16,10 @@ resource "aws_iam_policy" "snowflake_storage_integration_s3_adlog" {
   })
 }
 
-# resource "aws_iam_role_policy_attachment" "snowflake_storage_integration_s3_adlog" {
-#   role       = aws_iam_role.snowflake_storage_integration_s3_adlog.name
-#   policy_arn = aws_iam_policy.snowflake_storage_integration_s3_adlog.arn
-# }
+resource "aws_iam_role_policy_attachment" "snowflake_storage_integration_s3_adlog" {
+  role       = aws_iam_role.snowflake_storage_integration_s3_adlog.name
+  policy_arn = aws_iam_policy.snowflake_storage_integration_s3_adlog.arn
+}
 
 # Storage Integration Config for dsp tracking logs raw-data
 # resource "snowflake_storage_integration" "s3_adlog" {
