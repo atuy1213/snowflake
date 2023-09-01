@@ -22,24 +22,24 @@ resource "aws_iam_role_policy_attachment" "snowflake_storage_integration_s3_adlo
 }
 
 # Storage Integration Config for dsp tracking logs raw-data
-# resource "snowflake_storage_integration" "s3_adlog" {
-#   provider             = snowflake.sys_admin
-#   name                 = upper("${var.environment}_${var.project}_s3_adlog")
-#   comment              = "storage integration with S3 bucket"
-#   type                 = "EXTERNAL_STAGE"
-#   enabled              = true
-#   storage_provider     = "S3"
-#   storage_aws_role_arn = aws_iam_role.snowflake_storage_integration_s3_adlog.arn
-#   storage_allowed_locations = [
-#     "s3://${var.s3_bucket_name.dsp_tracking_logs}/",
-#   ]
-# }
+resource "snowflake_storage_integration" "s3_adlog" {
+  provider             = snowflake.sys_admin
+  name                 = upper("${var.environment}_${var.project}_s3_adlog")
+  comment              = "storage integration with S3 bucket"
+  type                 = "EXTERNAL_STAGE"
+  enabled              = true
+  storage_provider     = "S3"
+  storage_aws_role_arn = aws_iam_role.snowflake_storage_integration_s3_adlog.arn
+  storage_allowed_locations = [
+    "s3://${var.s3_bucket_name.dsp_tracking_logs}/",
+  ]
+}
 
-# resource "snowflake_integration_grant" "integration-tracking-logs" {
-#   provider               = snowflake.sys_admin
-#   integration_name       = snowflake_storage_integration.s3_adlog.name
-#   enable_multiple_grants = true
-#   privilege              = "USAGE"
-#   roles                  = [var.roles.developer, snowflake_role.app-db-ro.name]
-#   with_grant_option      = false
-# }
+resource "snowflake_integration_grant" "integration-tracking-logs" {
+  provider               = snowflake.sys_admin
+  integration_name       = snowflake_storage_integration.s3_adlog.name
+  enable_multiple_grants = true
+  privilege              = "USAGE"
+  roles                  = [var.roles.developer, snowflake_role.app-db-ro.name]
+  with_grant_option      = false
+}
