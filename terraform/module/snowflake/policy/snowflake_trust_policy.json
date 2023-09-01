@@ -5,12 +5,12 @@
       "Sid": "",
       "Effect": "Allow",
       "Principal": {
-        "AWS": "${snowflake_account_arn}"
+        "AWS": "${snowflake_storage_integration_iam_user_arn}"
       },
       "Action": "sts:AssumeRole",
       "Condition": {
         "StringEquals": {
-          "sts:ExternalId": "${snowflake_external_id}"
+          "sts:ExternalId": "${snowflake_storage_integration_external_id}"
         }
       }
     }
