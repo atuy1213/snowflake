@@ -4,5 +4,5 @@ variable "environment" {
   default = "dev"
 }
 variable "project" {
-  default = "github.com-atuy1213-snowflake"
+  default = "snowflake"
 }
