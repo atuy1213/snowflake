@@ -4,7 +4,7 @@ resource "aws_iam_role" "snowflake_storage_integration_s3_adlog" {
   description = "for snowflake storage integration with s3"
   assume_role_policy = templatefile("${path.module}/policy/snowflake_trust_policy.json", {
     snowflake_account_arn = var.snowflake_account_arn
-    snowflake_external_id = var.snowflake_s3_dsp_tracking_logs_integration_external_id
+    snowflake_external_id = var.snowflake_storage_integration_s3_adlog_external_id
   })
 }
 
