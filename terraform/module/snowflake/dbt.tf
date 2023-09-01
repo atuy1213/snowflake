@@ -161,6 +161,6 @@ resource "snowflake_grant_privileges_to_role" "dbt_external_stage_adlog" {
   all_privileges = true
   on_schema_object {
     object_type = "STAGE"
-    object_name = snowflake_stage.raw_adlog.name
+    object_name = "${snowflake_database.raw.name}.${snowflake_schema.raw_adlog.name}.${snowflake_stage.raw_adlog.name}"
   }
 }
