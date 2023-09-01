@@ -31,7 +31,7 @@ resource "snowflake_storage_integration" "s3_adlog" {
   storage_provider     = "S3"
   storage_aws_role_arn = aws_iam_role.snowflake_storage_integration_s3_adlog.arn
   storage_allowed_locations = [
-    "s3://${var.s3_bucket_name.dsp_tracking_logs}/",
+    "s3://${var.s3_adlog_bucket_name}/",
   ]
 }
 
