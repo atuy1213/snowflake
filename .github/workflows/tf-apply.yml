@@ -11,7 +11,9 @@ on:
         options:
           - common/github
           - common/snowflake
+          - dev/aws
           - dev/snowflake
+          - stg/aws
           - stg/snowflake
       refresh_only:
         description: 'run state refresh only (not apply)'
@@ -67,9 +69,9 @@ jobs:
         run: terraform -chdir=${{ inputs.stack }} plan -no-color -input=false
 
       - name: Refresh
-        if: ${{ inputs.refresh_only == 'true' }}
+        if: ${{ inputs.refresh_only }}
         run: terraform -chdir=${{ inputs.stack }} apply -no-color -refresh-only -auto-approve
 
       - name: Apply
-        if: ${{ inputs.refresh_only == 'false' }}
+        if: ${{ !inputs.refresh_only }}
         run: terraform -chdir=${{ inputs.stack }} apply -no-color -auto-approve

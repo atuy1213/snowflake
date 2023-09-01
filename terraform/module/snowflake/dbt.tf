@@ -146,3 +146,21 @@ resource "snowflake_grant_privileges_to_role" "dbt_future_table_in_mart" {
     }
   }
 }
+
+resource "snowflake_grant_privileges_to_role" "dbt_storage_integration_s3_adlog" {
+  role_name      = snowflake_role.dbt.name
+  all_privileges = true
+  on_account_object {
+    object_type = "INTEGRATION"
+    object_name = snowflake_storage_integration.s3_adlog.name
+  }
+}
+
+resource "snowflake_grant_privileges_to_role" "dbt_external_stage_adlog" {
+  role_name      = snowflake_role.dbt.name
+  all_privileges = true
+  on_schema_object {
+    object_type = "STAGE"
+    object_name = "${snowflake_database.raw.name}.${snowflake_schema.raw_adlog.name}.${snowflake_stage.raw_adlog.name}"
+  }
+}

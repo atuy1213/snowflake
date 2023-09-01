@@ -1,0 +1,28 @@
+name: 'Setup Snowflake env'
+inputs:
+  env:
+    description: 'target environment'
+    required: true
+    default: 'dev'
+    type: choice
+    options:
+      - dev
+      - stg
+env:
+  - ENV: ${{ inputs.env }}
+runs:
+  using: 'composite'
+  steps:
+    - name: Get parameters from SSM and set env of snowflake
+      run: |
+        SNOWFLAKE_S3_INTEGRATION_ADLOG_IAM_USER_ARN=$(aws ssm get-parameter --name /snowflake/$ENV/storage/integration/adlog/aws-iam-user-arn --query 'Parameter.Value' | tr -d '"')
+        SNOWFLAKE_S3_INTEGRATION_ADLOG_EXTERNAL_ID=$(aws ssm get-parameter --name /snowflake/$ENV/storage/integration/adlog/aws-external-id --query 'Parameter.Value' | tr -d '"')
+
+        # register to env
+        echo TF_VAR_snowflake_storage_integration_adlog_iam_user_arn=$SNOWFLAKE_S3_INTEGRATION_ADLOG_IAM_USER_ARN >> $GITHUB_ENV
+        echo TF_VAR_snowflake_storage_integration_adlog_external_id=$SNOWFLAKE_S3_INTEGRATION_ADLOG_EXTERNAL_ID >> $GITHUB_ENV
+
+        # hide parameters on github actions workflow
+        echo "::add-mask::$SNOWFLAKE_S3_INTEGRATION_ADLOG_IAM_USER_ARN"
+        echo "::add-mask::$SNOWFLAKE_S3_INTEGRATION_ADLOG_EXTERNAL_ID"
+      shell: bash
