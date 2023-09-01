@@ -91,6 +91,15 @@ resource "snowflake_grant_privileges_to_role" "migration_future_table_in_raw" {
   }
 }
 
+resource "snowflake_grant_privileges_to_role" "migration_external_stage_adlog" {
+  role_name      = snowflake_role.migration.name
+  all_privileges = true
+  on_schema_object {
+    object_type = "STAGE"
+    object_name = snowflake_stage.raw_adlog.name
+  }
+}
+
 resource "snowflake_grant_privileges_to_role" "migration_storage_integration_s3_adlog" {
   role_name      = snowflake_role.migration.name
   all_privileges = true
@@ -99,3 +108,4 @@ resource "snowflake_grant_privileges_to_role" "migration_storage_integration_s3_
     object_name = snowflake_storage_integration.s3_adlog.name
   }
 }
+
