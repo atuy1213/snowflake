@@ -12,7 +12,7 @@ resource "aws_iam_policy" "snowflake_storage_integration_s3_adlog" {
   name = "${var.environment}-${var.project}-snowflake-storage-integration-s3-adlog"
   policy = templatefile("${path.module}/policy/storage_integration_policy.json", {
     bucket_arn = var.s3_adlog_bucket_arn
-    s3_prefix  = "[\"*\"]"
+    s3_prefix  = ["*"]
   })
 }
 

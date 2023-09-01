@@ -21,7 +21,7 @@
       "Resource": "${bucket_arn}",
       "Condition": {
         "StringLike": {
-          "s3:prefix": "${s3_prefix}"
+          "s3:prefix": ${jsonencode(s3_prefix)}
         }
       }
     }
