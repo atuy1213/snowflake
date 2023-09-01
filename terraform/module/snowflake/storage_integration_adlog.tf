@@ -40,6 +40,9 @@ resource "snowflake_integration_grant" "integration-tracking-logs" {
   integration_name       = snowflake_storage_integration.s3_adlog.name
   enable_multiple_grants = true
   privilege              = "USAGE"
-  roles                  = [var.roles.developer, snowflake_role.app-db-ro.name]
-  with_grant_option      = false
+  roles = [
+    snowflake_role.dbt.name,
+    snowflake_role.migration.name
+  ]
+  with_grant_option = false
 }
