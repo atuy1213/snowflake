@@ -34,15 +34,3 @@ resource "snowflake_storage_integration" "s3_adlog" {
     "s3://${var.s3_adlog_bucket_name}/",
   ]
 }
-
-resource "snowflake_integration_grant" "integration-tracking-logs" {
-  provider               = snowflake.terraform
-  integration_name       = snowflake_storage_integration.s3_adlog.name
-  enable_multiple_grants = true
-  privilege              = "USAGE"
-  roles = [
-    snowflake_role.dbt.name,
-    snowflake_role.migration.name
-  ]
-  with_grant_option = false
-}
