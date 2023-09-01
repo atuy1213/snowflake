@@ -1,6 +1,6 @@
 resource "snowflake_stage" "raw_adlog" {
   provider            = snowflake.sys_admin
-  name                = upper("${var.environment}_adlog")
+  name                = upper("adlog")
   url                 = "s3://${var.s3_adlog_bucket_name}/"
   database            = snowflake_database.raw.name
   schema              = snowflake_schema.raw_adlog.name
