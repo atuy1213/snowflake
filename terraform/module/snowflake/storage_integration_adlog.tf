@@ -1,6 +1,6 @@
 # IAM Role for integration S3 dsp tracking logs raw-data with snowflake
 resource "aws_iam_role" "snowflake_storage_integration_s3_adlog" {
-  name        = "${var.environment}-${var.project}-snowflake_storage_integration_s3_adlog"
+  name        = "${var.environment}-${var.project}-snowflake-storage-integration-s3-adlog"
   description = "for snowflake storage integration with s3"
   assume_role_policy = templatefile("${path.module}/policy/snowflake_trust_policy.json", {
     snowflake_account_arn = var.snowflake_account_arn
@@ -9,7 +9,7 @@ resource "aws_iam_role" "snowflake_storage_integration_s3_adlog" {
 }
 
 resource "aws_iam_policy" "snowflake_storage_integration_s3_adlog" {
-  name = "${var.environment}-${var.project}-snowflake_storage_integration_s3_adlog"
+  name = "${var.environment}-${var.project}-snowflake-storage-integration-s3-adlog"
   policy = templatefile("${path.module}/policy/storage_integration_policy.json", {
     bucket_arn = var.s3_adlog_bucket_arn
     s3_prefix  = "[\"*\"]"
