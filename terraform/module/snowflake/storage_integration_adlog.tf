@@ -1,4 +1,5 @@
-# IAM Role for integration S3 dsp tracking logs raw-data with snowflake
+# https://docs.snowflake.com/user-guide/data-load-s3-config-storage-integration
+
 resource "aws_iam_role" "snowflake_storage_integration_s3_adlog" {
   name        = "${var.environment}-${var.project}-snowflake-storage-integration-s3-adlog"
   description = "for snowflake storage integration with s3"
@@ -21,9 +22,8 @@ resource "aws_iam_role_policy_attachment" "snowflake_storage_integration_s3_adlo
   policy_arn = aws_iam_policy.snowflake_storage_integration_s3_adlog.arn
 }
 
-# Storage Integration Config for dsp tracking logs raw-data
 resource "snowflake_storage_integration" "s3_adlog" {
-  provider             = snowflake.sys_admin
+  provider             = snowflake.terraform
   name                 = upper("${var.environment}_${var.project}_s3_adlog")
   comment              = "storage integration with S3 bucket"
   type                 = "EXTERNAL_STAGE"
@@ -36,7 +36,7 @@ resource "snowflake_storage_integration" "s3_adlog" {
 }
 
 resource "snowflake_integration_grant" "integration-tracking-logs" {
-  provider               = snowflake.sys_admin
+  provider               = snowflake.terraform
   integration_name       = snowflake_storage_integration.s3_adlog.name
   enable_multiple_grants = true
   privilege              = "USAGE"
